@@ -3,7 +3,7 @@ import antfu from "@antfu/eslint-config";
 
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
-export default withNuxt(antfu({
+export default await withNuxt(await antfu({
   type: "app",
   vue: true,
   typescript: true,
@@ -13,7 +13,7 @@ export default withNuxt(antfu({
     semi: true,
     quotes: "double",
   },
-  // ignores: [".pnpm-store/**", "**/migrations/*"],
+  ignores: [".pnpm-store/**", "**/migrations/*"],
 }, {
   rules: {
     "vue/max-attributes-per-line": ["error", {
