@@ -14,11 +14,6 @@ jobs:
       Node_Env: development
       TURSO_DATABASE_URL: ${{secrets.TURSO_DATABASE_URL}}
       TURSO_AUTH_TOKEN: ${{secrets.TURSO_AUTH_TOKEN}}
-    environment: build
-    env:
-      Node_Env: development
-      TURSO_DATABASE_URL: ${{secrets.TURSO_DATABASE_URL}}
-      TURSO_AUTH_TOKEN: ${{secrets.TURSO_AUTH_TOKEN}}
 
     steps:
       - uses: actions/checkout@v5
