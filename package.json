@@ -6,12 +6,13 @@
     "build": "nuxt build",
     "dev": "concurrently \"npm run dev:db\" \"nuxt dev\"",
     "dev:db": "turso dev --db-file local.db",
+    "dev": "concurrently \"npm run dev:db\" \"nuxt dev\"",
+    "dev:db": "turso dev --db-file local.db",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "prepare": "husky"
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
@@ -41,8 +42,6 @@
     "tsx": "^4.20.6"
   },
   "lint-staged": {
-    "*.{js,ts,vue}": [
-      "eslint --fix"
-    ]
+    "*.{js,ts,vue}": "eslint --fix"
   }
 }
