@@ -12,7 +12,7 @@ export const locationLog = sqliteTable("locationLog", {
   locationId: int().notNull().references(() => location.id),
   lat: real().notNull(),
   long: real().notNull(),
-  userId: int().notNull().references(() => user.id),
+  userId: text().notNull().references(() => user.id),
   createdAt: int().notNull().$default(() => Date.now()),
   updatedAt: int().notNull().$default(() => Date.now()).$onUpdate(() => Date.now()),
 });

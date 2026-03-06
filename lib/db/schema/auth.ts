@@ -1,83 +1,61 @@
-import { relations, sql } from "drizzle-orm";
-import { index, int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const user = sqliteTable("user", {
-  id: int().primaryKey({ autoIncrement: true }),
+  id: text().primaryKey(),
   name: text().notNull(),
   email: text().notNull().unique(),
   emailVerified: integer({ mode: "boolean" }).notNull(),
   image: text(),
-  createdAt: integer().notNull(),
-  updatedAt: integer().notNull(),
+
+  createdAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
+  updatedAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
 });
 
-export const session = sqliteTable(
-  "session",
-  {
-    id: int().primaryKey({ autoIncrement: true }),
-    expiresAt: integer().notNull(),
-    token: text().notNull().unique(),
-    createdAt: integer().notNull(),
-    updatedAt: integer().notNull(),
-    ipAddress: text(),
-    userAgent: text(),
-    userId: text()
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-  },
-  table => [index("session_userId_idx").on(table.userId)],
-);
+export const session = sqliteTable("session", {
+  id: text().primaryKey(),
 
-export const account = sqliteTable(
-  "account",
-  {
-    id: int().primaryKey({ autoIncrement: true }),
-    accountId: text().notNull(),
-    providerId: text().notNull(),
-    userId: text()
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    accessToken: text(),
-    refreshToken: text(),
-    idToken: text(),
-    accessTokenExpiresAt: integer(),
-    refreshTokenExpiresAt: integer(),
-    scope: text(),
-    password: text(),
-    createdAt: integer().notNull(),
-    updatedAt: integer().notNull(),
-  },
-  table => [index("account_userId_idx").on(table.userId)],
-);
+  expiresAt: integer({ mode: "timestamp" }).notNull(),
+  token: text().notNull().unique(),
 
-export const verification = sqliteTable(
-  "verification",
-  {
-    id: int().primaryKey({ autoIncrement: true }),
-    identifier: text().notNull(),
-    value: text().notNull(),
-    expiresAt: integer().notNull(),
-    createdAt: integer().notNull(),
-    updatedAt: integer().notNull(),
-  },
-  table => [index("verification_identifier_idx").on(table.identifier)],
-);
+  createdAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
+  updatedAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
 
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
-}));
+  ipAddress: text(),
+  userAgent: text(),
 
-export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
-  }),
-}));
+  userId: text().notNull().references(() => user.id, { onDelete: "cascade" }),
+});
 
-export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id],
-  }),
-}));
+export const account = sqliteTable("account", {
+  id: text().primaryKey(),
+
+  accountId: text().notNull(),
+  providerId: text().notNull(),
+
+  userId: text().notNull().references(() => user.id, { onDelete: "cascade" }),
+
+  accessToken: text(),
+  refreshToken: text(),
+  idToken: text(),
+
+  accessTokenExpiresAt: integer({ mode: "timestamp" }),
+  refreshTokenExpiresAt: integer({ mode: "timestamp" }),
+
+  scope: text(),
+  password: text(),
+
+  createdAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
+  updatedAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
+});
+
+export const verification = sqliteTable("verification", {
+  id: text().primaryKey(),
+
+  identifier: text().notNull(),
+  value: text().notNull(),
+
+  expiresAt: integer({ mode: "timestamp" }).notNull(),
+
+  createdAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
+  updatedAt: integer({ mode: "timestamp" }).notNull().defaultNow(),
+});
