@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: build
     env:
-      Node_Env: development
-      TURSO_DATABASE_URL: ${{secrets.TURSO_DATABASE_URL}}
-      TURSO_AUTH_TOKEN: ${{secrets.TURSO_AUTH_TOKEN}}
+      NODE_ENV: development
       AUTH_GITHUB_CLIENT_ID: ${{secrets.AUTH_GITHUB_CLIENT_ID}}
       AUTH_GITHUB_CLIENT_SECRET: ${{secrets.AUTH_GITHUB_CLIENT_SECRET}}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
 
     steps:
       - uses: actions/checkout@v5
