@@ -4,8 +4,14 @@ import tryParseEnv from "./try-parse-env";
 
 const EnvSchema = z.object({
   NODE_ENV: z.string(),
-  TURSO_DATABASE_URL: z.string(),
-  TURSO_AUTH_TOKEN: z.string(),
+  // eslint-disable-next-line node/no-process-env
+  TURSO_DATABASE_URL: process.env.NODE_ENV === "production"
+    ? z.string()
+    : z.string().optional(),
+  // eslint-disable-next-line node/no-process-env
+  TURSO_AUTH_TOKEN: process.env.NODE_ENV === "production"
+    ? z.string()
+    : z.string().optional(),
   BETTER_AUTH_SECRET: z.string(),
   BETTER_AUTH_URL: z.string(),
   AUTH_GITHUB_CLIENT_ID: z.string(),
