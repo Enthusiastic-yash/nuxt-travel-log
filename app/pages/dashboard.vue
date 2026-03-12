@@ -46,7 +46,9 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="flex-1 bg-amber-200" />
+    <div class="flex-1">
+      <NuxtPage />
+    </div>
   </div>
 </template>
 
