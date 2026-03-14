@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const user = sqliteTable("user", {
   id: text().primaryKey(),
@@ -23,7 +23,7 @@ export const session = sqliteTable("session", {
   ipAddress: text(),
   userAgent: text(),
 
-  userId: text().notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: int().notNull().references(() => user.id, { onDelete: "cascade" }),
 });
 
 export const account = sqliteTable("account", {
@@ -32,7 +32,7 @@ export const account = sqliteTable("account", {
   accountId: text().notNull(),
   providerId: text().notNull(),
 
-  userId: text().notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: int().notNull().references(() => user.id, { onDelete: "cascade" }),
 
   accessToken: text(),
   refreshToken: text(),
