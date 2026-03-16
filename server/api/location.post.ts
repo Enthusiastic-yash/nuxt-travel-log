@@ -5,7 +5,9 @@ import { InsertLocation } from "~~/lib/db/schema";
 import { error } from "better-auth/api";
 import slugify from "slug";
 
-export default defineEventHandler(async (event) => {
+import defineAuthenticatedEventHandler from "~/utils/define-auth-handler";
+
+export default defineAuthenticatedEventHandler(async (event) => {
   if (!event.context.user) {
     throw createError({
       statusCode: 401,
