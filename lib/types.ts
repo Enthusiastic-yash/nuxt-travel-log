@@ -1,9 +1,8 @@
-import type { User } from "better-auth";
+import type { UserWithId } from "./auth";
 
 declare module "h3" {
-  type H3EventContext = {
-    user?: Omit<User, "id"> & {
-      id: number;
-    };
-  };
+  // eslint-disable-next-line ts/consistent-type-definitions
+  interface H3EventContext {
+    user?: UserWithId;
+  }
 }
