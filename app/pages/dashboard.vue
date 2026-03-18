@@ -18,7 +18,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-1">
-    <div class="bg-base-100 transition-all ease-in-out duration-400" :class="{ 'w-64': isSideBarOpen, 'w-16': !isSideBarOpen }">
+    <div class="bg-base-100 transition-all ease-in-out duration-400 shrink-0" :class="{ 'w-64': isSideBarOpen, 'w-16': !isSideBarOpen }">
       <div class="flex" :class="{ 'justify-end': isSideBarOpen, 'justify-center': !isSideBarOpen }">
         <Icon
           :name="isSideBarOpen ? 'tabler:chevron-left' : 'tabler:chevron-right'"
@@ -64,9 +64,11 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="flex flex-1 flex-col">
-      <NuxtPage />
-      <Map class="flex-1" />
+    <div class="flex-1 overflow-auto">
+      <div class="flex flex-col size-full">
+        <NuxtPage />
+        <Map class="flex-1" />
+      </div>
     </div>
   </div>
 </template>

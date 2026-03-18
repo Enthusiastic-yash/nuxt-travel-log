@@ -6,3 +6,13 @@ declare module "h3" {
     user?: UserWithId;
   }
 }
+
+export type LatLongItem = {
+  lat: number;
+  long: number;
+};
+
+export type MapPoints = {
+  id: number;
+  label: string;
+} & LatLongItem;

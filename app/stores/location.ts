@@ -4,6 +4,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
   });
 
   const sideBarStore = useSidebarStore();
+  const mapStore = useMapStore();
   watchEffect(() => {
     if (data.value) {
       sideBarStore.loading = false;
@@ -12,6 +13,12 @@ export const useLocationStore = defineStore("useLocationStore", () => {
         label: location.name,
         icon: "tabler:map-pin-filled",
         href: "#",
+      }));
+      mapStore.mapPoints = data.value.map(location => ({
+        id: location.id,
+        lat: location.lat,
+        long: location.long,
+        label: location.name,
       }));
     }
     else {
