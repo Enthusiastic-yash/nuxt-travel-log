@@ -6,6 +6,7 @@ import { CENTER_INDIA } from "~~/lib/constant";
 export const useMapStore = defineStore("useMapStore", () => {
   const mapPoints = ref<MapPoints[]>([]);
   const selectedPoints = ref<MapPoints | null>(null);
+  const addedPoint = ref<MapPoints | null>(null);
 
   async function init() {
     const { useMap } = await import("@indoorequal/vue-maplibre-gl");
@@ -25,7 +26,7 @@ export const useMapStore = defineStore("useMapStore", () => {
         return;
       }
       bounds = mapPoints.value.reduce((bounds, point) => {
-        return bounds.extend([point.long, point.lat]);
+        return bounds.extend([point.long, point.lat] as [number, number]);
       }, new LngLatBounds([firstPoints.long, firstPoints.lat], [firstPoints.long, firstPoints.lat]));
       map.map?.fitBounds(bounds, {
         padding,
@@ -33,21 +34,19 @@ export const useMapStore = defineStore("useMapStore", () => {
       });
     });
 
-    watchEffect(() => {
-      const selected = selectedPoints.value;
-      if (!selected)
-        return bounds;
-      map.map?.flyTo({
-        center: [selected.long, selected.lat],
-        zoom: 9,
-        speed: 0.7,
-        easing(t) {
-          return t;
-        },
-        essential: true,
-      });
+    watch(addedPoint, (newValue, oldValue) => {
+      if (newValue && !oldValue) {
+        map.map?.flyTo({
+          center: [newValue.long, newValue.lat],
+          zoom: 6,
+          speed: 0.8,
+          essential: true,
+        });
+      }
+    }, {
+      immediate: true,
     });
   }
 
-  return { mapPoints, selectedPoints, init };
+  return { mapPoints, selectedPoints, init, addedPoint };
 });
