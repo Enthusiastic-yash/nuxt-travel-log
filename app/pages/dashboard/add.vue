@@ -1,19 +1,46 @@
 <script setup lang="ts">
 import type { FetchError } from "ofetch";
 
+import { CENTER_INDIA } from "~~/lib/constant";
 import { InsertLocation } from "~~/lib/db/schema";
 
+const mapStore = useMapStore();
 const submitError = ref("");
 const isSubmitted = ref(false);
 const router = useRouter();
 const { $csrfFetch } = useNuxtApp();
-const { handleSubmit, errors, meta, setErrors, isSubmitting } = useForm({
+
+type FormValues = {
+  name: string;
+  description: string;
+  lat: number | null;
+  long: number | null;
+};
+
+const { handleSubmit, errors, meta, setErrors, isSubmitting, setFieldValue, controlledValues } = useForm<FormValues>({
   initialValues: {
     name: "",
     description: "",
-    lat: null,
-    long: null,
+    lat: CENTER_INDIA[1],
+    long: CENTER_INDIA[0],
   },
+});
+
+watchEffect(() => {
+  if (mapStore.addedPoint) {
+    setFieldValue("long", mapStore.addedPoint.long);
+    setFieldValue("lat", mapStore.addedPoint.lat);
+  }
+});
+
+onMounted(() => {
+  mapStore.addedPoint = {
+    id: 1,
+    name: "Added point",
+    description: "",
+    lat: CENTER_INDIA[1],
+    long: CENTER_INDIA[0],
+  };
 });
 
 onBeforeRouteLeave(() => {
@@ -24,6 +51,7 @@ onBeforeRouteLeave(() => {
       return false;
     }
   }
+  mapStore.addedPoint = null;
   return true;
 });
 
@@ -61,7 +89,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="container max-w-md mx-auto  mt-4">
+  <div class="container max-w-md mx-auto  mt-4 p-4">
     <div
       v-if="submitError"
       role="alert"
@@ -104,20 +132,19 @@ const onSubmit = handleSubmit(async (values) => {
         :error="errors.description"
         :disabled="isSubmitting"
       />
-      <FormField
-        name="lat"
-        type="number"
-        label="Latitude"
-        :error="errors.lat"
-        :disabled="isSubmitting"
-      />
-      <FormField
-        name="long"
-        type="number"
-        label="Longitude"
-        :error="errors.long"
-        :disabled="isSubmitting"
-      />
+      <p>
+        Drag the <Icon
+          name="tabler:map-pin-filled"
+          size="18"
+          class="text-warning"
+        />  marker to your desired location.
+      </p>
+      <p class="text-sm text-gray-400">
+        Longitude: {{ controlledValues.long?.toFixed(4) }},  Latitude:{{ controlledValues.lat?.toFixed(4) }}
+      </p>
+      <p class="text-sm text-gray-400">
+        Or double click on the map.
+      </p>
       <div class="flex justify-end gap-x-2">
         <button
           type="button"

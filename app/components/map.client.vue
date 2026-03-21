@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import type { MglEvent } from "@indoorequal/vue-maplibre-gl";
+import type { LngLat } from "maplibre-gl";
+
 import {
+
   MglMap,
   MglNavigationControl,
   MglPopup,
@@ -16,6 +20,20 @@ const zoom = 3;
 onMounted(() => {
   mapStore.init();
 });
+
+function updateAddedPoint(location: LngLat) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.long = location.lng;
+    mapStore.addedPoint.lat = location.lat;
+  }
+}
+
+function onDoubleClick(event: MglEvent<"dblclick">) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.long = event.event.lngLat.lng;
+    mapStore.addedPoint.lat = event.event.lngLat.lat;
+  }
+}
 </script>
 
 <template>
@@ -24,7 +42,24 @@ onMounted(() => {
       :map-style="style"
       :center="CENTER_INDIA"
       :zoom="zoom"
+      @map:dblclick="onDoubleClick"
     >
+      <MglMarker
+        v-if="mapStore.addedPoint"
+        :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+        draggable
+        @update:coordinates="updateAddedPoint($event)"
+      >
+        <template #marker>
+          <div class="tooltip tooltip-open hover:cursor-pointer" data-tip="Drag to your desired location">
+            <Icon
+              name="tabler:map-pin-filled"
+              size="35"
+              class="text-warning"
+            />
+          </div>
+        </template>
+      </MglMarker>
       <MglNavigationControl />
       <MglMarker
         v-for="point in mapStore.mapPoints"
