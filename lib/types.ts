@@ -14,5 +14,6 @@ export type LatLongItem = {
 
 export type MapPoints = {
   id: number;
-  label: string;
+  name: string;
+  description: string | null;
 } & LatLongItem;

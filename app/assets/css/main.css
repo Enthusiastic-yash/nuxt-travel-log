@@ -4,3 +4,11 @@
     light --default,
     dark --prefersdark;
 }
+
+#__nuxt .maplibregl-popup-close-button {
+  color: black;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  padding: 2px 5px;
+}
