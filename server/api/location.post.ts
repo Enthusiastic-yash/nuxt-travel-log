@@ -6,6 +6,7 @@ import { error } from "better-auth/api";
 import slugify from "slug";
 
 import defineAuthenticatedEventHandler from "~/utils/define-auth-handler";
+import sendZodError from "~/utils/send-zod-error";
 
 export default defineAuthenticatedEventHandler(async (event) => {
   if (!event.context.user) {
@@ -16,15 +17,7 @@ export default defineAuthenticatedEventHandler(async (event) => {
   }
   const result = await readValidatedBody(event, InsertLocation.safeParse);
   if (!result.success) {
-    const statusMessage = result.error.issues.map(issues => `${issues.path.join()} : ${issues.message}`);
-    const data = Object.fromEntries(
-      result.error.issues.map(issue => [issue.path.join("."), issue.message]),
-    );
-    throw createError({
-      statusCode: 422,
-      statusText: `${statusMessage}`,
-      data,
-    });
+    return sendZodError(event, result.error);
   }
 
   const existingLocation = await findLocationByName(result.data, event.context.user.id);

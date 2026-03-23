@@ -6,7 +6,7 @@ import { CENTER_INDIA } from "~~/lib/constant";
 export const useMapStore = defineStore("useMapStore", () => {
   const mapPoints = ref<MapPoints[]>([]);
   const selectedPoints = ref<MapPoints | null>(null);
-  const addedPoint = ref<MapPoints | null>(null);
+  const addedPoint = ref<MapPoints & { centerMap?: boolean } | null>(null);
 
   async function init() {
     const { useMap } = await import("@indoorequal/vue-maplibre-gl");
@@ -35,7 +35,7 @@ export const useMapStore = defineStore("useMapStore", () => {
     });
 
     watch(addedPoint, (newValue, oldValue) => {
-      if (newValue && !oldValue) {
+      if ((newValue && !oldValue) || newValue?.centerMap) {
         map.map?.flyTo({
           center: [newValue.long, newValue.lat],
           zoom: 6,
