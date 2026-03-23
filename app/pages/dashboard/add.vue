@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { NominatimResult } from "~~/lib/types";
 import type { FetchError } from "ofetch";
 
 import { CENTER_INDIA } from "~~/lib/constant";
@@ -32,6 +33,18 @@ watchEffect(() => {
     setFieldValue("lat", mapStore.addedPoint.lat);
   }
 });
+
+function searchResult(result: NominatimResult) {
+  setFieldValue("name", result.name);
+  mapStore.addedPoint = {
+    id: 1,
+    name: "",
+    description: "",
+    lat: Number(result.lat),
+    long: Number(result.lon),
+    centerMap: true,
+  };
+}
 
 onMounted(() => {
   mapStore.addedPoint = {
@@ -132,12 +145,19 @@ const onSubmit = handleSubmit(async (values) => {
         :error="errors.description"
         :disabled="isSubmitting"
       />
-      <p>
+      <p class=" text-sm">
         Drag the <Icon
           name="tabler:map-pin-filled"
           size="18"
-          class="text-warning"
+          class="text-warning
+         "
         />  marker to your desired location.
+      </p>
+      <p class="text-sm">
+        Or double click on your desired location.
+      </p>
+      <p class="text-sm">
+        Or search for location below.
       </p>
       <p class="text-sm text-gray-400">
         Longitude: {{ controlledValues.long?.toFixed(4) }},  Latitude:{{ controlledValues.lat?.toFixed(4) }}
@@ -170,6 +190,8 @@ const onSubmit = handleSubmit(async (values) => {
         </button>
       </div>
     </form>
+    <div class="divider" />
+    <PlaceSearch @result-selected="searchResult" />
   </div>
 </template>
 
