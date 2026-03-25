@@ -22,6 +22,9 @@ export const useMapStore = defineStore("useMapStore", () => {
         map.map?.flyTo({
           center: CENTER_INDIA,
           zoom: 2,
+          speed: 0.8,
+          essential: true,
+
         });
         return;
       }

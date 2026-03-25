@@ -17,6 +17,18 @@ export async function findLocationByName(existing: InsertLocation, userId: numbe
   });
 }
 
+export function findLocation(slug: string, userId: number) {
+  return db.query.location.findFirst({
+    where: and(
+      eq(location.slug, slug),
+      eq(location.userId, userId),
+    ),
+    with: {
+      locationLogs: true,
+    },
+  });
+}
+
 export function findLocations(userId: number) {
   return db.query.location.findMany({
     where: eq(location.userId, userId),

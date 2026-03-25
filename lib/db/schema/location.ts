@@ -1,9 +1,11 @@
 import type z from "zod/v4";
 
+import { relations } from "drizzle-orm";
 import { int, real, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { user } from "./auth";
+import { locationLog } from "./location-log";
 
 export const location = sqliteTable("location", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -41,5 +43,9 @@ export const InsertLocation = createInsertSchema(location, {
   createdAt: true,
   updatedAt: true,
 });
+
+export const locationRelations = relations(location, ({ many }) => ({
+  locationLogs: many(locationLog), // One location has multiple location logs
+}));
 
 export type InsertLocation = z.infer<typeof InsertLocation>;

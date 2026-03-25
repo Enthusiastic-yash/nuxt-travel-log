@@ -38,10 +38,11 @@ export default defineAuthenticatedEventHandler(
       return data;
     }
     catch {
-      throw createError({
+      return sendError(event, createError({
         statusCode: 404,
-        statusMessage: "No results found",
-      });
+        statusText: "No results found",
+
+      }));
     }
   }, {
     maxAge: 60 * 60 * 24,
