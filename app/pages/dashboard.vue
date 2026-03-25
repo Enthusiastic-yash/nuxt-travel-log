@@ -18,7 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-1">
+  <div class="flex flex-1 min-h-64">
     <div class="bg-base-100 transition-all ease-in-out duration-400 shrink-0" :class="{ 'w-64': isSideBarOpen, 'w-16': !isSideBarOpen }">
       <div class="flex" :class="{ 'justify-end': isSideBarOpen, 'justify-center': !isSideBarOpen }">
         <Icon
@@ -53,6 +53,7 @@ onMounted(() => {
             :icon="item.icon"
             :href="item.href"
             :show-label="isSideBarOpen"
+            :to="item.to"
             :icon-color="mapStore.selectedPoints === item.location ? 'text-accent' : undefined"
             @mouseenter="mapStore.selectedPoints = item.location ?? null"
             @mouseleave="mapStore.selectedPoints = null"
