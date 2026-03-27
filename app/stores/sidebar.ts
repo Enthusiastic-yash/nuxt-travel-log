@@ -12,9 +12,11 @@ export type sideBarItem = {
 
 export const useSidebarStore = defineStore("useSidebarStore", () => {
   const sideBarItems = ref<sideBarItem[]>([]);
+  const sideBarTopItems = ref<sideBarItem[]>([]);
   const loading = ref(false);
   return {
     loading,
     sideBarItems,
+    sideBarTopItems,
   };
 });
