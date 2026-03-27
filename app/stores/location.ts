@@ -1,12 +1,15 @@
+const listLocationInSidebar = new Set(["dashboard", "dashboard-add"]);
 export const useLocationStore = defineStore("useLocationStore", () => {
   const { data, status, refresh } = useFetch("/api/location", {
     lazy: true,
   });
 
+  const route = useRoute();
+
   const sideBarStore = useSidebarStore();
   const mapStore = useMapStore();
   watchEffect(() => {
-    if (data.value) {
+    if (data.value && listLocationInSidebar.has(route.name?.toString() || "")) {
       sideBarStore.loading = false;
       sideBarStore.sideBarItems = data.value.map(location => ({
         id: `location-${location.id}`,
@@ -19,6 +22,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
     }
     else {
       sideBarStore.loading = status.value === "pending";
+      sideBarStore.sideBarItems = [];
     }
   });
   return {

@@ -15,6 +15,69 @@ onMounted(() => {
     locationStore.refresh();
   }
 });
+
+watchEffect(() => {
+  if (route.name === "dashboard") {
+    sideBarStore.sideBarTopItems = [
+      {
+        id: "link-dashboard",
+        label: "Locations",
+        href: "/dashboard",
+        icon: "tabler:map",
+      },
+      {
+        id: "link-location-add",
+        label: "Add Location",
+        href: "/dashboard/add",
+        icon: "tabler:circle-plus-filled",
+      },
+    ];
+  }
+  else if (route.name === "dashboard-location-slug") {
+    sideBarStore.sideBarTopItems = [
+      {
+        id: "link-dashboard",
+        label: "Back to Locations",
+        href: "/dashboard",
+        icon: "tabler:arrow-left",
+      },
+      {
+        id: "link-dashboard",
+        label: String(route.params.slug),
+        href: "/dashboard",
+        to: {
+          name: "dashboard-location-slug",
+          params: {
+            slug: route.params.slug,
+          },
+        },
+        icon: "tabler:map",
+      },
+      {
+        id: "link-location-add",
+        label: "Add Location Log",
+        to: {
+          name: "dashboard-location-slug-add",
+          params: {
+            slug: route.params.slug,
+          },
+        },
+        icon: "tabler:circle-plus-filled",
+      },
+      {
+        id: "link-location-edit",
+        label: "Edit Location",
+        to: {
+          name: "dashboard-location-slug-edit",
+          params: {
+            slug: route.params.slug,
+          },
+        },
+        icon: "tabler:map-pin-cog",
+      },
+    ];
+  }
+});
 </script>
 
 <template>
@@ -30,17 +93,15 @@ onMounted(() => {
       </div>
       <div class="flex flex-col gap-2">
         <SidebarButton
-          icon="tabler:map"
-          label="Locations"
-          href="/dashboard"
+          v-for="item in sideBarStore.sideBarTopItems"
+          :key="item.id"
+          :icon="item.icon"
+          :label="item.label"
+          :href="item.href"
           :show-label="isSideBarOpen"
+          :to="item.to"
         />
-        <SidebarButton
-          icon="tabler:circle-plus-filled"
-          label="Add Location"
-          href="/dashboard/add"
-          :show-label="isSideBarOpen"
-        />
+
         <div v-if="sideBarStore.loading || sideBarStore.sideBarItems.length" class="divider" />
         <div v-if="sideBarStore.loading" class="px-4">
           <div class="skeleton h-6  w-full" />
