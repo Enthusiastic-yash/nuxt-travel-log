@@ -1,9 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
-const { slug } = route.params;
-const { data: location, status, error } = useFetch(`/api/location/${slug}`, {
-  lazy: true,
-});
+const locationStore = useLocationStore();
+const { currentLocation: location, currentLocationStatus: status, currentLocationError: error } = storeToRefs(locationStore);
 const mapStore = useMapStore();
 
 watchEffect(() => {
@@ -11,14 +9,26 @@ watchEffect(() => {
     mapStore.mapPoints = [location.value];
   }
 });
+
+watchEffect(() => {
+  if (route.params.slug && route.name !== "dashboard-location-slug-add") {
+    locationStore.refreshCurrentLocation();
+  }
+});
+
+// onBeforeRouteUpdate((to) => {
+//   if (to.name === "dashboard-location-slug") {
+//     locationStore.refreshCurrentLocation();
+//   }
+// });
 </script>
 
 <template>
-  <div class="p-4 min-h-64">
+  <div class="p-4 min-h-64 container max-w-md">
     <div v-if="status === 'pending'">
       <div class="loading " />
     </div>
-    <div v-if="location && status !== 'pending'">
+    <div v-if="route.name === 'dashboard-location-slug' && location && status !== 'pending'">
       <h2 class="text-xl">
         {{ location?.name }}
       </h2>
@@ -39,6 +49,10 @@ watchEffect(() => {
       <h2 class="text-lg alert alert-error">
         {{ error.statusMessage }}
       </h2>
+    </div>
+
+    <div v-if="route.name !== 'dashboard-location-slug'">
+      <NuxtPage />
     </div>
   </div>
 </template>
