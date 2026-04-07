@@ -1,23 +1,29 @@
 <script setup lang="ts">
+import { CURRENT_LOCATION_PAGES, EDIT_PAGES, LOCATION_PAGE } from "~~/lib/constant";
+
 const route = useRoute();
 const isSideBarOpen = ref(false);
 const sideBarStore = useSidebarStore();
-const locationStore = useLocationStore();
+// const locationStore = useLocationStore();
 const mapStore = useMapStore();
 function toggleSideBar() {
   isSideBarOpen.value = !isSideBarOpen.value;
   localStorage.setItem("isSideBarOpen", isSideBarOpen.value.toString());
 }
 
+// if (LOCATION_PAGE.has(route.name?.toString() || "")) {
+//   await locationStore.refreshLocations();
+// }
+// if (CURRENT_LOCATION_PAGES.has(route.name?.toString() || "")) {
+//   locationStore.refreshCurrentLocation();
+// }
+
 onMounted(() => {
   isSideBarOpen.value = localStorage.getItem("isSideBarOpen") === "true";
-  if (route.path !== "/dashboard") {
-    locationStore.refresh();
-  }
 });
 
 watchEffect(() => {
-  if (route.name === "dashboard") {
+  if (LOCATION_PAGE.has(route.name?.toString() || "")) {
     sideBarStore.sideBarTopItems = [
       {
         id: "link-dashboard",
@@ -33,7 +39,7 @@ watchEffect(() => {
       },
     ];
   }
-  else if (route.name === "dashboard-location-slug") {
+  else if (CURRENT_LOCATION_PAGES.has(route.name?.toString() || "")) {
     sideBarStore.sideBarTopItems = [
       {
         id: "link-dashboard",
@@ -44,7 +50,6 @@ watchEffect(() => {
       {
         id: "link-dashboard",
         label: String(route.params.slug),
-        href: "/dashboard",
         to: {
           name: "dashboard-location-slug",
           params: {
@@ -131,7 +136,7 @@ watchEffect(() => {
     </div>
 
     <div class="flex-1 overflow-auto bg-base-200">
-      <div class="flex size-full" :class="{ 'flex-col': route.path !== '/dashboard/add' }">
+      <div class="flex size-full" :class="{ 'flex-col': !EDIT_PAGES.has(route.name?.toString() || '') }">
         <NuxtPage />
         <Map class="flex-1" />
       </div>
