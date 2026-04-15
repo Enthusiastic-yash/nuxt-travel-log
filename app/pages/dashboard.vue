@@ -58,17 +58,17 @@ watchEffect(() => {
         },
         icon: "tabler:map",
       },
-      {
-        id: "link-location-add",
-        label: "Add Location Log",
-        to: {
-          name: "dashboard-location-slug-add",
-          params: {
-            slug: route.params.slug,
-          },
-        },
-        icon: "tabler:circle-plus-filled",
-      },
+      // {
+      //   id: "link-location-add",
+      //   label: "Add Location Log",
+      //   to: {
+      //     name: "dashboard-location-slug-add",
+      //     params: {
+      //       slug: route.params.slug,
+      //     },
+      //   },
+      //   icon: "tabler:circle-plus-filled",
+      // },
       {
         id: "link-location-edit",
         label: "Edit Location",
