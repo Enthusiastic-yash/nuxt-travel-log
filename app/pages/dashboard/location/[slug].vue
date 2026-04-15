@@ -7,7 +7,7 @@ const { currentLocation: location, currentLocationStatus: status, currentLocatio
 const mapStore = useMapStore();
 
 const isOpen = ref(false);
-const deleteError = ref("");
+const deleteError = ref<string | undefined>("");
 const isDeleting = ref(false);
 
 watchEffect(() => {
@@ -93,15 +93,15 @@ const errorMessage = computed(() => error.value?.statusMessage || deleteError.va
       <p class="text-sm">
         {{ location?.description }}
       </p>
-      <div v-if="!location.locationLogs.length" class="text-sm mt-4">
+      <!-- <div v-if="!location.locationLogs.length" class="text-sm mt-4">
         <p>
           Add location log to get started.
         </p>
-        <button class="btn btn-primary mt-2">
+        <NuxtLink :to="{ name: 'dashboard-location-slug-add', params: { slug: route.params.slug } }" class="btn btn-primary mt-2">
           Add Location log
           <Icon name="tabler:map-pin-plus" size="24" />
-        </button>
-      </div>
+        </NuxtLink>
+      </div> -->
     </div>
 
     <div v-if="route.name !== 'dashboard-location-slug'">
